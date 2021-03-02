@@ -1,9 +1,16 @@
 ##
 # Providers
 ##
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=2.46.0"
+    }
+  }
+}
+
 provider "azurerm" {
-  # whilst the `version` attribute is optional, we recommend pinning to a given version of the Provider
-  version = "=2.0.0"
   features {}
 }
 
@@ -20,7 +27,12 @@ variable "resource_group_name" {
 variable "resource_group_location" {
   type        = string
   default     = "Central US"
-  description = "Name of resource group to create"
+  description = "Location of resource group to create"
+
+  validation {
+    condition     = can(regex("US", var.resource_group_location))
+    error_message = "The resource group must be in the US, containing \"US\"."
+  }
 }
 
 
